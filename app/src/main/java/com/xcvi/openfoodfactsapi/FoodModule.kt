@@ -1,6 +1,7 @@
 package com.xcvi.openfoodfactsapi
 
 import android.content.Context
+import androidx.room.Room
 import com.xcvi.openfoodfactsapi.data.FoodApi
 import com.xcvi.openfoodfactsapi.data.FoodDatabase
 import com.xcvi.openfoodfactsapi.data.FoodRepository
@@ -23,9 +24,14 @@ object FoodModule {
 
     @Provides
     @Singleton
-    fun provideFoodDatabase(@ApplicationContext context: Context): FoodDatabase {
-        return FoodDatabase.getInstance(context)
+    fun provideDatabase(@ApplicationContext context: Context): FoodDatabase {
+        return Room.databaseBuilder(
+            context.applicationContext,
+            FoodDatabase::class.java,
+            "food_db.db"
+        ).build()
     }
+
 
     @Provides
     @Singleton

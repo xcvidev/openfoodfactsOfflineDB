@@ -9,13 +9,13 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.zip.ZipInputStream
 
-fun prepopulateDatabaseFromZippedCSV(zipFileName: String, context: Context, db: FoodDatabase) {
+private fun prepopulateDatabaseFromZippedCSV(context: Context, db: FoodDatabase) {
     CoroutineScope(Dispatchers.IO).launch {
         val batchSize = 1000
         val buffer = mutableListOf<FoodEntity>()
 
         try {
-            val zipStream = ZipInputStream(context.assets.open(zipFileName))
+            val zipStream = ZipInputStream(context.assets.open("food_db.zip"))
             zipStream.use { zip ->
                 var entry = zip.nextEntry
                 while (entry != null) {
@@ -33,8 +33,14 @@ fun prepopulateDatabaseFromZippedCSV(zipFileName: String, context: Context, db: 
                                     val barcode = tokens[0]
                                     val name = tokens[1]
                                     val brand = tokens[2]
-                                    buffer.add(FoodEntity(name = name, brand = brand, barcode = barcode))
-                                    println( "Added Food: $line")
+                                    buffer.add(
+                                        FoodEntity(
+                                            name = name,
+                                            brand = brand,
+                                            barcode = barcode
+                                        )
+                                    )
+                                    println("Added Food: $line")
 
                                 } else {
                                     println("Malformed line: $line")
@@ -42,7 +48,7 @@ fun prepopulateDatabaseFromZippedCSV(zipFileName: String, context: Context, db: 
 
                                 if (buffer.size >= batchSize) {
                                     db.dao.insertFoods(buffer)
-                                    println( "Inserted batch of ${buffer.size}")
+                                    println("Inserted batch of ${buffer.size}")
                                     buffer.clear()
                                 }
                             }

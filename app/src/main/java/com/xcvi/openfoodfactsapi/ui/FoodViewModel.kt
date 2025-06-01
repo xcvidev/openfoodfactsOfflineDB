@@ -16,11 +16,6 @@ class FoodViewModel @Inject constructor(
 
     val foods: MutableStateFlow<List<FoodEntity>> = MutableStateFlow(emptyList())
 
-    init {
-        viewModelScope.launch {
-            foodRepository.checkDB()
-        }
-    }
 
     fun scan(barcode: String) {
         foods.value = emptyList()

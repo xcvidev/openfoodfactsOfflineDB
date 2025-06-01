@@ -11,7 +11,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.Upsert
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.xcvi.openfoodfactsapi.data.utils.prepopulateDatabaseFromZippedCSV
 
 @Database(
     entities = [FoodEntity::class],
@@ -20,7 +19,7 @@ import com.xcvi.openfoodfactsapi.data.utils.prepopulateDatabaseFromZippedCSV
 )
 abstract class FoodDatabase : RoomDatabase() {
     abstract val dao: FoodDao
-
+    /*
     companion object {
 
         @Volatile
@@ -37,16 +36,21 @@ abstract class FoodDatabase : RoomDatabase() {
                 context.applicationContext,
                 FoodDatabase::
                 class.java, "food_db.db"
-            ).addCallback(
+            )
+                .addCallback(
                 object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
+                        //for small file sizes
+                        /*
                         prepopulateDatabaseFromZippedCSV(zipFileName = "food_db.zip", context = context, db = getInstance(context))
+                       */
                     }
                 }
             ).build()
         }
     }
+     */
 }
 
 @Dao

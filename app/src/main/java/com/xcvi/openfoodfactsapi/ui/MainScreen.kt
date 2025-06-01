@@ -1,5 +1,6 @@
 package com.xcvi.openfoodfactsapi.ui
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
@@ -18,7 +20,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,11 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.semantics.SemanticsProperties.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.work.WorkInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +48,9 @@ fun MainScreen(
     }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+
+
+
     Scaffold(
         floatingActionButton = {
             LargeFloatingActionButton(
@@ -63,6 +67,7 @@ fun MainScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
+
             item{
                 Row {
                     TextField(
@@ -92,14 +97,18 @@ fun MainScreen(
                         keyboardOptions = KeyboardOptions(
                             imeAction = androidx.compose.ui.text.input.ImeAction.Search
                         ),
-                        modifier = Modifier.padding(8.dp).fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth(),
                         value = text,
                         onValueChange = {
                             text = it
                         }
                     )
                     Button(
-                        modifier = Modifier.padding(8.dp).weight(1f),
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .weight(1f),
                         onClick = {
                         viewModel.search(text)
                         keyboardController?.hide()
@@ -112,7 +121,9 @@ fun MainScreen(
             foods.forEach { food ->
                 item {
                     Card(
-                        modifier = Modifier.padding(12.dp).fillMaxWidth()
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .fillMaxWidth()
                     ) {
                         Text("Name: ${food.name} (${food.brand})", fontSize = 20.sp)
                         Text("Barcode: ${food.barcode}")

@@ -5,8 +5,6 @@ import io.ktor.client.engine.android.Android
 import io.ktor.client.features.HttpTimeout
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.get
 import kotlinx.serialization.json.Json
 
@@ -16,6 +14,7 @@ class FoodApiImpl(private val client: HttpClient) : FoodApi {
 
     override suspend fun scanFood(barcode: String): ScanResponse {
         return try {
+
             val res: ScanResponse = client.get("$url/$barcode")
             if(res.product == null){
                 ScanResponse(
@@ -43,9 +42,6 @@ interface FoodApi {
         fun create(): FoodApi {
             return FoodApiImpl(
                 client = HttpClient(Android) {
-                    install(Logging) {
-                        level = LogLevel.INFO
-                    }
 
                     install(HttpTimeout) {
                         requestTimeoutMillis = 10000
@@ -60,6 +56,8 @@ interface FoodApi {
                             ignoreUnknownKeys = true
                         })
                     }
+
+
                 }
             )
         }
