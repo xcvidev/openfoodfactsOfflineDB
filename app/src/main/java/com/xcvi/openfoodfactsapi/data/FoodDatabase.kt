@@ -15,7 +15,7 @@ import com.xcvi.openfoodfactsapi.data.utils.prepopulateDatabaseFromZippedCSV
 import kotlinx.coroutines.flow.Flow
 
 @Database(
-    entities = [FoodEntity::class],
+    entities = [FoodEntity::class, OfflineFoodEntity::class],
     version = 1,
     //exportSchema = false
 )
@@ -38,14 +38,17 @@ abstract class FoodDatabase : RoomDatabase() {
                 context.applicationContext,
                 FoodDatabase::class.java,
                 "food_db.db"
-            ).addCallback(
+            ).createFromAsset("food_db.db").build()
+                /*
+                .addCallback(
                 object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
                         prepopulateDatabaseFromZippedCSV(context = context, db = getInstance(context))
                     }
                 }
-            ).build()
+            )*/
+
         }
     }
 
