@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.common)
     ksp(libs.hilt.androidcompiler)
     ksp(libs.hilt.hiltcompiler)
 
@@ -81,6 +82,9 @@ dependencies {
 
 
     implementation(libs.androidx.navigation)
+
+    implementation ("androidx.work:work-runtime-ktx:2.7.0")
+    implementation ("androidx.hilt:hilt-work:1.2.0")
 
     implementation ("io.ktor:ktor-client-core:1.6.3")
     implementation ("io.ktor:ktor-client-android:1.6.3")

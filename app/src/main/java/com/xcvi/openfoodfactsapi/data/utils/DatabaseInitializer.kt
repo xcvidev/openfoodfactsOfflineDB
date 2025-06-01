@@ -9,7 +9,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.zip.ZipInputStream
 
-private fun prepopulateDatabaseFromZippedCSV(context: Context, db: FoodDatabase) {
+fun prepopulateDatabaseFromZippedCSV(context: Context, db: FoodDatabase) {
     CoroutineScope(Dispatchers.IO).launch {
         val batchSize = 1000
         val buffer = mutableListOf<FoodEntity>()
@@ -22,13 +22,14 @@ private fun prepopulateDatabaseFromZippedCSV(context: Context, db: FoodDatabase)
                     if (entry.name.endsWith(".csv")) {
                         BufferedReader(InputStreamReader(zip)).useLines { lines ->
                             val iterator = lines.iterator()
-
+                            var counter = 0
                             if (iterator.hasNext()) iterator.next() // skip header
 
                             while (iterator.hasNext()) {
                                 val line = iterator.next()
                                 val tokens = line.split(",")
-
+                                counter++
+                                println("Line: $counter")
                                 if (tokens.size >= 3) {
                                     val barcode = tokens[0]
                                     val name = tokens[1]
@@ -40,6 +41,7 @@ private fun prepopulateDatabaseFromZippedCSV(context: Context, db: FoodDatabase)
                                             barcode = barcode
                                         )
                                     )
+
                                     println("Added Food: $line")
 
                                 } else {

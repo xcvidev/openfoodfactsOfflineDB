@@ -2,6 +2,9 @@ package com.xcvi.openfoodfactsapi.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.Constraints
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.xcvi.openfoodfactsapi.data.FoodEntity
 import com.xcvi.openfoodfactsapi.data.FoodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,11 +14,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FoodViewModel @Inject constructor(
-    private val foodRepository: FoodRepository
+    private val foodRepository: FoodRepository,
 ): ViewModel()  {
 
     val foods: MutableStateFlow<List<FoodEntity>> = MutableStateFlow(emptyList())
+    val size: MutableStateFlow<Int> = MutableStateFlow(0)
 
+    init {
+        viewModelScope.launch {
+            foodRepository.observeSize().collect {
+                size.value = it
+            }
+        }
+    }
 
     fun scan(barcode: String) {
         foods.value = emptyList()

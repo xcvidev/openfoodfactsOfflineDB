@@ -11,6 +11,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.Upsert
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.xcvi.openfoodfactsapi.data.utils.prepopulateDatabaseFromZippedCSV
+import kotlinx.coroutines.flow.Flow
 
 @Database(
     entities = [FoodEntity::class],
@@ -19,7 +21,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 )
 abstract class FoodDatabase : RoomDatabase() {
     abstract val dao: FoodDao
-    /*
+
     companion object {
 
         @Volatile
@@ -34,23 +36,19 @@ abstract class FoodDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context): FoodDatabase {
             return Room.databaseBuilder(
                 context.applicationContext,
-                FoodDatabase::
-                class.java, "food_db.db"
-            )
-                .addCallback(
+                FoodDatabase::class.java,
+                "food_db.db"
+            ).addCallback(
                 object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
-                        //for small file sizes
-                        /*
-                        prepopulateDatabaseFromZippedCSV(zipFileName = "food_db.zip", context = context, db = getInstance(context))
-                       */
+                        prepopulateDatabaseFromZippedCSV(context = context, db = getInstance(context))
                     }
                 }
             ).build()
         }
     }
-     */
+
 }
 
 @Dao
@@ -63,6 +61,9 @@ interface FoodDao {
 
     @Query("SELECT * FROM foodentity WHERE barcode = :barcode")
     suspend fun getFoodByBarcode(barcode: String): FoodEntity?
+
+    @Query("SELECT * FROM foodentity")
+    fun observeFoods(): Flow<List<FoodEntity>>
 
     @Query("SELECT * FROM foodentity WHERE name LIKE '%' || :name || '%'")
     suspend fun searchFood(name: String): List<FoodEntity>

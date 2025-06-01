@@ -118,6 +118,10 @@ fun MainScreen(
                     }
                 }
             }
+
+            item{
+                Text("Size: ${viewModel.size.collectAsStateWithLifecycle().value}")
+            }
             foods.forEach { food ->
                 item {
                     Card(

@@ -28,6 +28,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContent {
             OpenFoodFactsApiTheme {
@@ -35,7 +36,6 @@ class MainActivity : ComponentActivity() {
                     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
                     val navController = rememberNavController()
                     val viewModel: FoodViewModel = hiltViewModel()
-
 
                     if (cameraPermissionState.status.isGranted) {
                         NavHost(

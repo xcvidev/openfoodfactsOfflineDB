@@ -1,15 +1,24 @@
 package com.xcvi.openfoodfactsapi
 
 import android.content.Context
+import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.RoomDatabase.Callback
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.work.WorkManager
 import com.xcvi.openfoodfactsapi.data.FoodApi
 import com.xcvi.openfoodfactsapi.data.FoodDatabase
 import com.xcvi.openfoodfactsapi.data.FoodRepository
+import com.xcvi.openfoodfactsapi.data.utils.prepopulateDatabaseFromZippedCSV
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Singleton
 
 @Module
@@ -25,11 +34,7 @@ object FoodModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): FoodDatabase {
-        return Room.databaseBuilder(
-            context.applicationContext,
-            FoodDatabase::class.java,
-            "food_db.db"
-        ).build()
+        return FoodDatabase.getInstance(context)
     }
 
 

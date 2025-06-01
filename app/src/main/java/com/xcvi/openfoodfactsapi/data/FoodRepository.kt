@@ -1,13 +1,17 @@
 package com.xcvi.openfoodfactsapi.data
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class FoodRepository(
     private val api: FoodApi,
     private val db: FoodDatabase,
 ) {
 
-    suspend fun checkDB() {
-        db.dao.getFoodByBarcode("")
+    suspend fun observeSize(): Flow<Int> {
+        return db.dao.observeFoods().map { it
+            it.size
+        }
     }
 
     suspend fun scanFood(barcode: String): FoodEntity {
